@@ -1,5 +1,5 @@
 # Promotion
-## Daily Rebate Promotion
+## DAILY REBATE PROMOTION
 - Duration 
 
 Start Time - Long Term
@@ -17,7 +17,6 @@ Start Time - Long Term
  # 1. Backend Development:
 The backend team will be responsible for implementing the core logic of the promotion, including calculating interest, updating VIP levels, and managing user accounts.
 
-## Core Backend Logic:
 - Daily Rebate Calculation:
 
 Implement a scheduled job (e.g., cron job) to run daily at 1:00 a.m. to calculate the interest for users.
@@ -83,3 +82,117 @@ Use real-time updates to show when a user's account balance changes due to the i
 Implement progress bars that show how close the user is to the next VIP level based on their betting history.
 - Bonus Notification:
 Once the user meets the conditions and the backend calculates the bonus, display a notification or popup informing them that they’ve earned the bonus.
+
+
+# MULTI-BET BONUS PROMOTION
+- Duration 
+
+Start Time - End Time
+- Conditions to qualify for this bet
+ 1. Account needs to be binded (phone number/Google authenticator etc) to qualify for this promotion.
+ 2. A user must place at least 100 bets on different games (3 or more lottery games qualifies as different games) within a 30-day period.
+ 3. Each bet should have a bet amount not less than 10$ and a cummulative threshold amount of 1000$ in the 30-day period.
+ 4. Once the conditions are met, calculate the bonus. For instance, if the cumulative bet amount reaches the threshold, apply a 10% bonus on the total wagered amount.
+
+- Example:
+
+A user places different bets:
+Bet 1: 10$ on Game A
+Bet 2: 30$ on Game B
+Bet 3: 20$ on Game C
+Bet 4: 100$ on Game D
+Bet 5: 50$ on Game E
+etc
+If the conditions are met (bets on different games, each bet less equal and greater than 10$ and threshold total amount of 1000$), the backend should calculate the total wagered amount and apply the bonus (e.g., 10% of total wagered amount = bonus).
+
+
+ # 1. Backend Development:
+The backend needs to track user's bets across multiple games, calculate bonuses, and applying rewards when conditions are met.
+
+- Bet Tracking:
+Create a mechanism to track individual bets that meet the criteria for this promotion. Each bet should be associated with:
+User ID
+Game ID (to ensure bets are on different games).
+Bet amount
+Date (to ensure it falls within the qualifying period).
+
+- Bonus Application:
+Once the bonus is calculated, update the user’s account balance with the bonus amount.
+Log the bonus in the transaction history for transparency.
+
+- Period Tracking:
+The backend should track the date range during which the promotion is valid and only apply the bonus if bets are placed within this period.
+
+- Database Schema:
+Create tables or collections to store:
+Bets (with relevant fields like User ID, Game ID, Bet Amount, Date).
+Bonuses (with User ID, Bonus Amount, Date Awarded).
+Promotion Rules (to allow flexibility in updating conditions).
+
+# 2. Frontend Development:
+The frontend needs to display the user’s progress toward meeting the conditions for the bonus and showing the bonus when earned.
+
+## User Interface (UI) for Bet Progress:
+- Bet Tracking Display:
+
+Create a progress bar or visual indicator that tracks the user's progress toward qualifying for the bonus.
+For example, display how many qualifying bets the user has placed and how many more are needed to meet the condition (e.g., "You’ve placed 42/100 qualifying bets").
+
+- Real-Time Updates:
+As users place new bets, update the progress display in real time. This requires the frontend to communicate with the backend via API to fetch updated progress information after each bet.
+
+## Bonus Display:
+- Bonus Notification:
+Once the user meets the conditions and the backend calculates the bonus, display a notification or popup informing them that they’ve earned the bonus.
+Example: “Congratulations! You’ve earned a 10% bonus of 30$ for placing X qualifying bets and bet amount!”
+
+## Transaction History:
+- Add a section where users can view the bonus and related information in their transaction history (bonus amount, qualifying period, etc.).
+
+## Promotional Banner:
+- Display a promotional banner on the user dashboard to encourage them to participate in the multi-bet promotion, showing their current progress and potential reward.
+
+
+# 3. WELCOME BONUS FOR NEW PLAYERS:
+- Duration 
+
+Start Time - Long Term
+- Conditions to qualify for this bet
+1. New User Registration:
+The user must create a new account on the platform. This means they have never had an account before, and the system should detect them as a new user.
+2. First Deposit Requirement:
+The user must make their first-ever deposit into their account. This is a critical condition, as the welcome bonus will only be applied after the first deposit is made.
+3. Minimum Deposit Amount:
+There will be a minimum deposit amount required to qualify for the welcome bonus. For example, the user might need to deposit at least $10 to qualify.
+The system should check that the deposit meets or exceeds the threshold before applying the bonus.
+4. Eligibility for Only One Bonus:
+Each user is eligible for only one welcome bonus. Once the bonus is awarded after the first deposit, the system should mark the bonus awarded as true to prevent users from claiming multiple welcome bonuses.
+5. Security Verification:
+The user needs to verify/bind their account (e.g., through email or phone verification) before qualifying for the bonus.
+- Example of Conditions:
+- Condition 1: User must create a new account.
+- Condition 2: User must make their first deposit of at least $10.
+- Condition 3: The welcome bonus can only be awarded once per user.
+- Condition 4 (Optional): User must verify their account via email or phone before receiving the bonus.
+
+# 1. Backend Development:
+The backend will be responsible for detecting new users, processing their first deposit, and applying the welcome bonus.
+
+## User Sign-Up and Initial Setup:
+
+Create the logic to track new user registrations. Once a user signs up, ensure they are flagged as eligible for the welcome bonus.
+
+Add a “first-deposit” flag in the database that tracks whether the user has made their first deposit. This will be critical in ensuring that the bonus is applied only after the first deposit.
+
+Database Schema Update: Ensure the user table or collection contains fields such as:
+
+is_new_user: true
+first_deposit: false
+bonus_awarded: false
+First Deposit Detection:
+
+Implement logic to detect when a user makes their first deposit. The system should check if the first_deposit flag is false and then switch it to true once the deposit is made.
+
+
+
+
