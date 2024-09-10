@@ -169,30 +169,79 @@ The system should check that the deposit meets or exceeds the threshold before a
 Each user is eligible for only one welcome bonus. Once the bonus is awarded after the first deposit, the system should mark the bonus awarded as true to prevent users from claiming multiple welcome bonuses.
 5. Security Verification:
 The user needs to verify/bind their account (e.g., through email or phone verification) before qualifying for the bonus.
+6. The bonus amount cannot be withdrawn and will be added in another section called the Bonus balance not your real balance.
+7. After any bet you use with your bonus amount, the wagered amount is subtracted from your winning and the remaining balance is added to your real balance which then affects you account change or transaction history and which the user can withdraw. 
+8. No Rebate or Self Rebate with first deposit bonus wagers.
 - Example of Conditions:
 - Condition 1: User must create a new account.
 - Condition 2: User must make their first deposit of at least $10.
 - Condition 3: The welcome bonus can only be awarded once per user.
 - Condition 4 (Optional): User must verify their account via email or phone before receiving the bonus.
+- Condition 5 Receive 100% of first deposit amount.
 
 # 1. Backend Development:
 The backend will be responsible for detecting new users, processing their first deposit, and applying the welcome bonus.
 
 ## User Sign-Up and Initial Setup:
 
-Create the logic to track new user registrations. Once a user signs up, ensure they are flagged as eligible for the welcome bonus.
+- Create the logic to track new user registrations. Once a user signs up, ensure they are flagged as eligible for the welcome bonus.
+- Add a “first-deposit” flag in the database that tracks whether the user has made their first deposit. This is critical in ensuring that the bonus is applied only after the first deposit.
+- Implement logic to detect when a user makes their first deposit. The system should check if the first deposit flag is false and then switch it to true once the deposit is made.
 
-Add a “first-deposit” flag in the database that tracks whether the user has made their first deposit. This will be critical in ensuring that the bonus is applied only after the first deposit.
+## Bonus Calculation and Application:
 
-Database Schema Update: Ensure the user table or collection contains fields such as:
+- Once the first deposit is confirmed, apply the welcome bonus according to the rules. For instance:
+Bonus Amount: If the user deposits 100$, they may receive a 100% bonus (e.g., a 100$ bonus).
+Database Update: After applying the bonus, update the bonus_awarded flag so that the user does not receive multiple bonuses.
 
-is_new_user: true
-first_deposit: false
-bonus_awarded: false
-First Deposit Detection:
+## Bonus Balance Mechanics:
+- The backend should ensure that when a user places a bet using their Bonus Balance, the wager amount is deducted from their bonus funds first.
+- After the bet, if the user wins, the backend will:
+- Subtract the wagered bonus amount from the total winnings.
+- Transfer the remaining winnings to the user's Real Balance.
+- Using the first deposit bonus balance for a bet wager does not give self rebate and/or rebate to user and his agent respectively. Only real balance usage ensures this rebate distribution. 
 
-Implement logic to detect when a user makes their first deposit. The system should check if the first_deposit flag is false and then switch it to true once the deposit is made.
+## Example Workflow:
+- User Bets: The user places a bet using 20$ from their bonus balance.
+- User Wins: The winnings are 50$.
+- Bonus Deduction: The backend subtracts the bonus wager (20$) from the winnings.
+- Real Balance Update: The remaining 30$ (50 - 20) are added to the user's real balance.
 
+## Wager Tracking:
+- Each bet that uses the Bonus Balance should be tracked to ensure the system deducts the bonus funds properly.
+- Implement logic to ensure the bonus amount cannot be withdrawn directly, but the resulting winnings (after deducting the wagered bonus) can be.
+## Transaction History:
+Track Bonus Bets:
+Update the user's transaction history to clearly show bets made using the Bonus Balance, how much of the winnings were transferred to the Real Balance, and how much of the bonus was used.
 
+# 2. Frontend Development:
+The frontend team will be responsible for creating a user-friendly sign-up process, guiding users through their first deposit, and displaying the bonus once they qualify.
 
+# Sign-Up and Deposit UI
+- User Registration Interface:
+Create a simple and intuitive registration form that collects the necessary information (e.g., email, password, and any other required fields). (Already Have This)
 
+# Deposit Interface:
+- Provide a clear deposit interface where users can make their first deposit. This can include selecting payment methods, entering the deposit amount, and confirming the transaction. (Already Have This)
+# Progress Feedback:
+- Once the deposit is made, show confirmation that the deposit was successful and indicate the user’s eligibility for the welcome bonus.
+- For example, show a message: "Congratulations! You’ve made your first deposit. A 100% welcome bonus has been applied to your account."
+
+# Bonus Display:
+- Dashboard Notification
+After the backend applies the bonus, the frontend should display the bonus amount on the user’s dashboard. This can be done via a banner, popup, or notification.
+Example: "You’ve received a 50% bonus! Your account balance is now updated."
+
+# Bonus Balance Display:
+- On the user’s dashboard, the Bonus Balance should be displayed separately from the Real Balance to make it clear that the bonus funds cannot be withdrawn.
+- When placing bets, provide an option for users to choose whether they want to use their Bonus Balance or Real Balance. If they choose the Bonus Balance, the system should:
+- Deduct the bet amount from the bonus funds.
+- Show them that any winnings will be transferred to their Real Balance, minus the wagered bonus.
+- After a bet that uses the Bonus Balance is settled, show the breakdown of how much of the winnings went to the Real Balance and how much was deducted as bonus funds.
+
+# Withdrawal Restrictions:
+- Make it clear to the user that the Bonus Balance cannot be withdrawn. Only the Real Balance can be withdrawn after the bonus conditions (wagering) are met.
+
+# Transaction History:
+- Allow users to view their transaction history, showing both the first deposit and the bonus applied.
+-Track Bonus Bets: Update the user's transaction history to clearly show bets made using the Bonus Balance, how much of the winnings were transferred to the Real Balance, and how much of the bonus was used.
